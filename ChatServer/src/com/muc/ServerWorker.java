@@ -1,10 +1,12 @@
 package com.muc;
 
-import com.sun.deploy.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import ch.qos.logback.classic.Logger;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -41,8 +43,8 @@ public class ServerWorker extends Thread{
         BufferedReader bReader = new BufferedReader(new InputStreamReader(inputStream));
         String line;
         while ((line = bReader.readLine()) != null) {
-            String[] tokens = StringUtils.splitString(line," ");
-            if (tokens.length > 0) {
+            String[] tokens = StringUtils.split(line);
+            if (tokens != null && tokens.length > 0) {
                 String cmd = tokens[0];
                 if (cmd.equals("logoff") || cmd.equalsIgnoreCase("quit")) {
                     handleLogoff();
@@ -135,7 +137,7 @@ public class ServerWorker extends Thread{
             String login = tokens[1];
             String password = tokens[2];
 
-            if (/*(login.equals("guest") || login.equals("jim")) &&*/ password.equals("pass")) {
+            if (password.equalsIgnoreCase("pass")) {
                 String msg;
                 msg = "ok login\n";
                 outputStream.write(msg.getBytes());
@@ -146,9 +148,11 @@ public class ServerWorker extends Thread{
 
                 // send current user all other online logins
                 for (ServerWorker worker : workerList) {
-                    if (worker.getLogin() != null && !login.equals(worker.getLogin())) {
-                        String msg2 = "online " + worker.getLogin() + "\n";
-                        send(msg2);
+                    if (worker.getLogin() != null) {
+                        if (!login.equals(worker.getLogin())) {
+                            String msg2 = "online " + worker.getLogin() + "\n";
+                            send(msg2);
+                        }
                     }
                 }
 
@@ -169,8 +173,11 @@ public class ServerWorker extends Thread{
 
     private void send(String onlineMsg) throws IOException {
         if (login != null) {
-            outputStream.write(onlineMsg.getBytes());
+            try {
+                outputStream.write(onlineMsg.getBytes());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
     }
 }

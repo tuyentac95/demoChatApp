@@ -1,7 +1,6 @@
 package com.muc;
 
-import com.sun.deploy.util.StringUtils;
-import sun.plugin2.message.Message;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.net.Socket;
@@ -50,13 +49,9 @@ public class ChatClient {
             System.out.println("Connect successful");
             if (client.login("guest","pass")) {
                 System.out.println("Login successful");
-
-//                client.msg("tuyen","Hello Tuyen");
             } else {
                 System.err.println("Login failed");
             }
-            
-            //client.logoff();
         }
     }
 
@@ -99,8 +94,8 @@ public class ChatClient {
         try {
             String line;
             while ((line = bufferedIn.readLine()) != null) {
-                String[] tokens = StringUtils.splitString(line," ");
-                if (tokens.length > 0) {
+                String[] tokens = StringUtils.split(line);
+                if (tokens != null && tokens.length > 0) {
                     String cmd = tokens[0];
                     if (cmd.equalsIgnoreCase("online")) {
                         handleOnline(tokens);
@@ -120,7 +115,6 @@ public class ChatClient {
                 ioException.printStackTrace();
             }
         }
-
     }
 
     private void handleMessage(String[] tokensMsg) {

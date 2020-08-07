@@ -1,7 +1,5 @@
 package com.muc;
 
-import sun.rmi.runtime.Log;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -24,6 +22,7 @@ public class LoginWindow extends JFrame {
 
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+        p.setSize(500,200);
         p.add(loginField);
         p.add(passwordField);
         p.add(loginButton);
@@ -47,7 +46,7 @@ public class LoginWindow extends JFrame {
         String password = passwordField.getText();
 
         try {
-            if (client.login(login,password)) {
+            if (client.login(login, password)) {
                 UserListPane userListPane = new UserListPane(client);
                 JFrame frame = new JFrame("User List");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,7 +55,7 @@ public class LoginWindow extends JFrame {
                 frame.getContentPane().add(userListPane, BorderLayout.CENTER);
                 frame.setVisible(true);
 
-                //setVisible(false);
+                setVisible(false);
             } else {
                 JOptionPane.showMessageDialog(this,"Invalid login/password");
             }

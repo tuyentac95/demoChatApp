@@ -30,7 +30,7 @@ public class MessagePane extends JPanel implements MessageListener{
             public void actionPerformed(ActionEvent e) {
                 try {
                     String text = inputField.getText();
-                    client.msg(login,inputField.getText());
+                    client.msg(login,text);
                     listModel.addElement("You: " + text);
                     inputField.setText("");
                 } catch (IOException ioException) {
@@ -42,7 +42,7 @@ public class MessagePane extends JPanel implements MessageListener{
 
     @Override
     public void onMessage(String fromLogin, String messageBody) {
-        if (fromLogin.equalsIgnoreCase(login)) {
+        if (login.equalsIgnoreCase(fromLogin)) {
             String line = fromLogin + ": " + messageBody;
             listModel.addElement(line);
         }
