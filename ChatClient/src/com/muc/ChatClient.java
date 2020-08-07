@@ -51,7 +51,7 @@ public class ChatClient {
             if (client.login("guest","pass")) {
                 System.out.println("Login successful");
 
-                client.msg("tuyen","Hello Tuyen");
+//                client.msg("tuyen","Hello Tuyen");
             } else {
                 System.err.println("Login failed");
             }

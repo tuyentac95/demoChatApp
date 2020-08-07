@@ -56,7 +56,7 @@ public class LoginWindow extends JFrame {
                 frame.getContentPane().add(userListPane, BorderLayout.CENTER);
                 frame.setVisible(true);
 
-                setVisible(false);
+                //setVisible(false);
             } else {
                 JOptionPane.showMessageDialog(this,"Invalid login/password");
             }

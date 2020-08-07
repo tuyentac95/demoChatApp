@@ -35,7 +35,6 @@ public class UserListPane extends JPanel implements UserStatusListener{
                 }
             }
         });
-
     }
 
     public static void main(String[] args) {
