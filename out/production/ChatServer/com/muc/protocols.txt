@@ -1,15 +1,15 @@
-User & Server
+com.muc.User & Server
 
-1. User --> Server
+1. com.muc.User --> Server
 
     * login / logoff
     * status
 
-2. Server --> User
+2. Server --> com.muc.User
 
     * online / offline
 
-3. User --> User
+3. com.muc.User --> com.muc.User
 
     * direct messages
     * broadcast messages / group messaging

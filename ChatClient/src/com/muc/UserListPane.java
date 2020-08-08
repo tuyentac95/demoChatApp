@@ -10,10 +10,12 @@ public class UserListPane extends JPanel implements UserStatusListener{
     private final ChatClient client;
     private JList<String> userListUI;
     private DefaultListModel<String> userListModel;
+    private String login;
 
-    public UserListPane(ChatClient client) {
+    public UserListPane(ChatClient client, String login) {
         this.client = client;
         this.client.addUserStatusListener(this);
+        this.login = login;
 
         userListModel = new DefaultListModel<>();
         userListUI = new JList<>(userListModel);
@@ -40,8 +42,9 @@ public class UserListPane extends JPanel implements UserStatusListener{
     public static void main(String[] args) {
         ChatClient client = new ChatClient("localhost",8819);
 
-        UserListPane userListPane = new UserListPane(client);
+        UserListPane userListPane = new UserListPane(client,"guest");
         JFrame frame = new JFrame("User List");
+        frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400,600);
 
@@ -50,7 +53,7 @@ public class UserListPane extends JPanel implements UserStatusListener{
 
         if (client.connect()) {
             try {
-                client.login("guest","pass");
+                client.login("tuyen","pass");
             } catch (IOException e) {
                 e.printStackTrace();
             }

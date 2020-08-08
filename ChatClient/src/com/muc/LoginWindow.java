@@ -22,7 +22,6 @@ public class LoginWindow extends JFrame {
 
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-        p.setSize(500,200);
         p.add(loginField);
         p.add(passwordField);
         p.add(loginButton);
@@ -47,7 +46,7 @@ public class LoginWindow extends JFrame {
 
         try {
             if (client.login(login, password)) {
-                UserListPane userListPane = new UserListPane(client);
+                UserListPane userListPane = new UserListPane(client,login);
                 JFrame frame = new JFrame("User List");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setSize(400,600);

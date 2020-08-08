@@ -75,6 +75,20 @@ public class ChatClient {
         }
     }
 
+    public boolean signUp(String newUserSign) throws IOException {
+        String cmd = "sign " + newUserSign + "\n";
+        serverOut.write(cmd.getBytes());
+
+        String response = bufferedIn.readLine();
+        System.out.println("Response Line: " + response);
+
+        if (response.equalsIgnoreCase("ok sign up")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void logoff() throws IOException{
         String cmd = "logoff\n";
         serverOut.write(cmd.getBytes());
@@ -168,4 +182,5 @@ public class ChatClient {
     public void removeMessageListener(MessageListener listener) {
         messageListeners.remove(listener);
     }
+
 }

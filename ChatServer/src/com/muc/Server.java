@@ -31,7 +31,7 @@ public class Server extends Thread{
                 workersList.add(worker);
                 worker.start();
             }
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

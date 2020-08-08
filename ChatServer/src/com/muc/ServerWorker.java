@@ -7,6 +7,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -17,8 +18,13 @@ public class ServerWorker extends Thread{
     private String login = null;
     private OutputStream outputStream;
     private HashSet<String> topicSet = new HashSet<>();
+    private static final String PATH = "Database\\src\\usersProfile.txt";
 
-    public ServerWorker(Server server, Socket clientSocket) {
+    private UserManagement userManagement = new UserManagement(PATH);
+    private ArrayList<User> users;
+
+
+    public ServerWorker(Server server, Socket clientSocket) throws IOException, ClassNotFoundException {
         this.server = server;
         this.clientSocket = clientSocket;
     }
@@ -51,6 +57,9 @@ public class ServerWorker extends Thread{
                     break;
                 } else if (cmd.equalsIgnoreCase("login")) {
                     handleLogin(outputStream, tokens);
+                } else if (cmd.equalsIgnoreCase("sign")) {
+                    String[] tokensMsg = line.split(" ",5);
+                    handleSignUp(tokensMsg);
                 } else if (cmd.equalsIgnoreCase("msg")) {
                     String[] tokensMsg = line.split(" ",3);
                     handleMessage(tokensMsg);
@@ -65,6 +74,41 @@ public class ServerWorker extends Thread{
             }
         }
         clientSocket.close();
+    }
+
+    private void handleSignUp(String[] tokens) throws IOException {
+        if (tokens.length == 5) {
+            String newLogin = tokens[1];
+            if (!isLoginExist(newLogin)) {
+                String msg;
+                msg = "ok sign up\n";
+                outputStream.write(msg.getBytes());
+                System.out.println("Sign up successful for " + newLogin);
+
+                String newPassword = tokens[2];
+                String newName = tokens[4];
+                String newAge = tokens[3];
+
+                User newUser = new User(newLogin,newPassword);
+                newUser.setName(newName);
+                newUser.setAge(Integer.parseInt(newAge));
+
+                try {
+                    users = userManagement.readFile();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                users.add(newUser);
+                userManagement.setUsers(users);
+                userManagement.writeFile();
+
+            } else {
+                String msg;
+                msg = "user is exist\n";
+                outputStream.write(msg.getBytes());
+                System.err.println("Sign up fail for " + newLogin);
+            }
+        }
     }
 
     private void handleLeave(String[] tokens) {
@@ -137,7 +181,7 @@ public class ServerWorker extends Thread{
             String login = tokens[1];
             String password = tokens[2];
 
-            if (password.equalsIgnoreCase("pass")) {
+            if (checkLogin(login,password)) {
                 String msg;
                 msg = "ok login\n";
                 outputStream.write(msg.getBytes());
@@ -179,5 +223,39 @@ public class ServerWorker extends Thread{
                 e.printStackTrace();
             }
         }
+    }
+
+    private boolean checkLogin(String login, String password) {
+        try {
+            users = userManagement.readFile();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        boolean check = false;
+        for (User nextUser : users) {
+            boolean loginMatch = nextUser.getLogin().equals(login);
+            boolean passwordMatch = nextUser.getPassword().equals(password);
+            if (loginMatch && passwordMatch) {
+                check = true;
+                break;
+            }
+        }
+        return check;
+    }
+
+    public boolean isLoginExist(String login) {
+        try {
+            users = userManagement.readFile();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        boolean check = false;
+        for (User nextUser : users) {
+            if (nextUser.getLogin().equals(login)) {
+                check = true;
+                break;
+            }
+        }
+        return check;
     }
 }
