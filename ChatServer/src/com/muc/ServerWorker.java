@@ -23,7 +23,6 @@ public class ServerWorker extends Thread{
     private UserManagement userManagement = new UserManagement(PATH);
     private ArrayList<User> users;
 
-
     public ServerWorker(Server server, Socket clientSocket) throws IOException, ClassNotFoundException {
         this.server = server;
         this.clientSocket = clientSocket;
@@ -36,6 +35,13 @@ public class ServerWorker extends Thread{
         } catch (IOException | InterruptedException e) {
             if (e.getMessage().equalsIgnoreCase("Connection reset")) {
                 System.out.println("Client disconnected.. Waiting for another connection");
+                if (login != null) {
+                    try {
+                        handleLogoff();
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
             } else {
                 e.printStackTrace();
             }
@@ -160,6 +166,7 @@ public class ServerWorker extends Thread{
     }
 
     private void handleLogoff() throws IOException {
+        System.out.println("User is logged off: " + login);
         server.removeWorker(this);
         List<ServerWorker> workerList = server.getWorkerList();
 

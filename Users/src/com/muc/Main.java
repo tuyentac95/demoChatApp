@@ -124,7 +124,12 @@ public class Main extends JFrame {
                 JFrame frame = new JFrame("User List");
                 frame.setLayout(new BorderLayout());
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
                 frame.setSize(400,600);
+
+                JPanel headPanel = new JPanel();
+                headPanel.add(new JLabel("User: " + login));
+                frame.getContentPane().add(headPanel,BorderLayout.NORTH);
 
                 frame.getContentPane().add(userListPane, BorderLayout.CENTER);
                 frame.setVisible(true);
