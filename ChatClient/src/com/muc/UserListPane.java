@@ -26,10 +26,15 @@ public class UserListPane extends JPanel implements UserStatusListener{
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() > 1) {
-                    String login = userListUI.getSelectedValue();
-                    MessagePane messagePane = new MessagePane(client,login);
+                    String friend = userListUI.getSelectedValue();
+                    MessagePane messagePane = null;
+                    try {
+                        messagePane = new MessagePane(client,friend);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
 
-                    JFrame f = new JFrame("Message: " + login);
+                    JFrame f = new JFrame("Message: " + friend);
                     f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     f.setSize(400,300);
                     f.getContentPane().add(messagePane,BorderLayout.CENTER);

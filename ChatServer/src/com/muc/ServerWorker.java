@@ -69,6 +69,8 @@ public class ServerWorker extends Thread{
                 } else if (tokens.length >= 3 && cmd.equalsIgnoreCase("msg")) {
                     String[] tokensMsg = line.split(" ",3);
                     handleMessage(tokensMsg);
+                } else if (tokens.length == 2 && cmd.equalsIgnoreCase("load")) {
+                    handleLoadMessages(tokens);
                 } else if (cmd.equalsIgnoreCase("join")) {
                     handleJoin(tokens);
                 } else if (cmd.equalsIgnoreCase("leave")) {
@@ -80,6 +82,34 @@ public class ServerWorker extends Thread{
             }
         }
         clientSocket.close();
+    }
+
+    private void handleLoadMessages(String[] tokens) throws IOException {
+        String first, last;
+        String sendTo = tokens[1];
+        if (login.compareTo(sendTo) > 0) {
+            first = login;
+            last = sendTo;
+        } else {
+            first = sendTo;
+            last = login;
+        }
+        String path = "E:\\Codegym\\DemoChatApp\\Database\\src\\" + first + last + ".txt";
+
+        File file = new File(path);
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+
+        BufferedReader brReader = new BufferedReader(new FileReader(file));
+
+        String line = "";
+        String messageLoad = "";
+        while ((line = brReader.readLine()) != null) {
+            messageLoad += (line + "\n");
+        }
+        System.out.println(messageLoad);
+        outputStream.write(messageLoad.getBytes());
     }
 
     private void handleSignUp(String[] tokens) throws IOException {

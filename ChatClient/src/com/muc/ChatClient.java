@@ -96,6 +96,13 @@ public class ChatClient {
         serverOut.write(cmd.getBytes());
     }
 
+    public void loadMessage(String friend) throws IOException {
+        String cmd = "load " + friend + "\n";
+        serverOut.write(cmd.getBytes());
+
+        //startMessageReader();
+    }
+
     private void startMessageReader() {
         Thread t = new Thread() {
             @Override
@@ -184,5 +191,4 @@ public class ChatClient {
     public void removeMessageListener(MessageListener listener) {
         messageListeners.remove(listener);
     }
-
 }
