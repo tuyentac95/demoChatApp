@@ -108,7 +108,7 @@ public class ServerWorker extends Thread{
         while ((line = brReader.readLine()) != null) {
             messageLoad += (line + "\n");
         }
-        System.out.println(messageLoad);
+
         outputStream.write(messageLoad.getBytes());
     }
 
