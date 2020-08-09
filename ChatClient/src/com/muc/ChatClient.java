@@ -47,7 +47,7 @@ public class ChatClient {
             System.err.println("Connect failed");
         } else {
             System.out.println("Connect successful");
-            if (client.login("guest","pass")) {
+            if (client.login("guest","pass") == 1) {
                 System.out.println("Login successful");
             } else {
                 System.err.println("Login failed");
@@ -60,7 +60,7 @@ public class ChatClient {
         serverOut.write(cmd.getBytes());
     }
 
-    public boolean login(String login, String password) throws IOException {
+    public int login(String login, String password) throws IOException {
         String cmd = "login " + login + " " + password + "\n";
         serverOut.write(cmd.getBytes());
 
@@ -69,9 +69,11 @@ public class ChatClient {
 
         if (response.equalsIgnoreCase("ok login")) {
             startMessageReader();
-            return true;
+            return 1;
+        } else if (response.equalsIgnoreCase("already login")) {
+            return 0;
         } else {
-            return false;
+            return -1;
         }
     }
 

@@ -66,7 +66,7 @@ public class ServerWorker extends Thread{
                 } else if (cmd.equalsIgnoreCase("sign")) {
                     String[] tokensMsg = line.split(" ",5);
                     handleSignUp(tokensMsg);
-                } else if (cmd.equalsIgnoreCase("msg")) {
+                } else if (tokens.length >= 3 && cmd.equalsIgnoreCase("msg")) {
                     String[] tokensMsg = line.split(" ",3);
                     handleMessage(tokensMsg);
                 } else if (cmd.equalsIgnoreCase("join")) {
@@ -159,10 +159,28 @@ public class ServerWorker extends Thread{
             } else {
                 if (worker.getLogin().equalsIgnoreCase(sendTo)) {
                     String outMsg = "msg " + login + " " + body + "\n";
+                    saveMessages(outMsg,login,sendTo);
                     worker.send(outMsg);
                 }
             }
         }
+    }
+
+    private void saveMessages(String newMessage, String user1, String user2) throws IOException {
+        String first, last;
+        if (user1.compareTo(user2) > 0) {
+            first = user1;
+            last = user2;
+        } else {
+            first = user2;
+            last = user1;
+        }
+        String path = "E:\\Codegym\\DemoChatApp\\Database\\src\\" + first + last + ".txt";
+        File file = new File(path);
+
+        BufferedWriter brWrite = new BufferedWriter(new FileWriter(file,true));
+        brWrite.write(newMessage);
+        brWrite.close();
     }
 
     private void handleLogoff() throws IOException {
@@ -189,13 +207,24 @@ public class ServerWorker extends Thread{
             String password = tokens[2];
 
             if (checkLogin(login,password)) {
+                List<ServerWorker> workerList = server.getWorkerList();
+
+                for (ServerWorker worker : workerList) {
+                    if (worker.getLogin() != null && worker.getLogin().equals(login)) {
+                        String msg;
+                        msg = "already login\n";
+                        outputStream.write(msg.getBytes());
+                        return;
+                    }
+                }
+
                 String msg;
                 msg = "ok login\n";
                 outputStream.write(msg.getBytes());
                 this.login = login;
                 System.out.println("User logged in successfully: " + login);
 
-                List<ServerWorker> workerList = server.getWorkerList();
+
 
                 // send current user all other online logins
                 for (ServerWorker worker : workerList) {

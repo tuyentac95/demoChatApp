@@ -45,7 +45,8 @@ public class LoginWindow extends JFrame {
         String password = passwordField.getText();
 
         try {
-            if (client.login(login, password)) {
+            int check = client.login(login, password);
+            if (check > 0) {
                 UserListPane userListPane = new UserListPane(client,login);
                 JFrame frame = new JFrame("User List");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -55,8 +56,10 @@ public class LoginWindow extends JFrame {
                 frame.setVisible(true);
 
                 setVisible(false);
-            } else {
+            } else if (check < 0){
                 JOptionPane.showMessageDialog(this,"Invalid login/password");
+            } else {
+                JOptionPane.showMessageDialog(this,"User is already login");
             }
         } catch (IOException e) {
             e.printStackTrace();

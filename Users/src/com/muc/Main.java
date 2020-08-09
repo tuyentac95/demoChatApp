@@ -21,12 +21,20 @@ public class Main extends JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel p = new JPanel();
-        p.setLayout(new BoxLayout(p,BoxLayout.Y_AXIS));
-        p.add(loginField);
-        p.add(passwordField);
-        p.add(loginButton);
-        p.add(signUpButton);
+        JPanel headPanel = new JPanel();
+        headPanel.add(new JLabel("Login"));
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridLayout(2,2));
+        mainPanel.setSize(400,100);
+        mainPanel.add(new JLabel("User: "));
+        mainPanel.add(loginField);
+        mainPanel.add(new JLabel("Password: "));
+        mainPanel.add(passwordField);
+
+        JPanel footPanel = new JPanel();
+        footPanel.add(loginButton);
+        footPanel.add(signUpButton);
 
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -38,11 +46,13 @@ public class Main extends JFrame {
         signUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                doSignUp(p);
+                doSignUp(mainPanel);
             }
         });
 
-        getContentPane().add(p, BorderLayout.CENTER);
+        getContentPane().add(headPanel,BorderLayout.NORTH);
+        getContentPane().add(mainPanel, BorderLayout.CENTER);
+        getContentPane().add(footPanel,BorderLayout.SOUTH);
         pack();
         setVisible(true);
     }
@@ -118,7 +128,8 @@ public class Main extends JFrame {
         String password = passwordField.getText();
 
         try {
-            if (client.login(login,password)) {
+            int check = client.login(login,password);
+            if (check > 0) {
                 UserListPane userListPane = new UserListPane(client,login);
 
                 JFrame frame = new JFrame("User List");
@@ -135,8 +146,10 @@ public class Main extends JFrame {
                 frame.setVisible(true);
 
                 setVisible(false);
-            } else {
+            } else if (check < 0){
                 JOptionPane.showMessageDialog(this,"Invalid login/password");
+            } else {
+                JOptionPane.showMessageDialog(this,"User is already login");
             }
         } catch (IOException e) {
             e.printStackTrace();
