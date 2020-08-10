@@ -33,6 +33,7 @@ public class MessagePane extends JPanel implements MessageListener{
             public void actionPerformed(ActionEvent e) {
                 try {
                     String text = inputField.getText();
+                    System.out.println(text);
                     client.msg(friend,text);
                     listModel.addElement("You: " + text);
                     inputField.setText("");

@@ -205,6 +205,7 @@ public class ServerWorker extends Thread{
             first = user2;
             last = user1;
         }
+
         String path = "E:\\Codegym\\DemoChatApp\\Database\\src\\" + first + last + ".txt";
         File file = new File(path);
 

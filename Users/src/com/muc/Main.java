@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 public class Main extends JFrame {
@@ -21,20 +23,27 @@ public class Main extends JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        JPanel loginPanel = new JPanel();
+        loginPanel.setLayout(new BorderLayout());
+
         JPanel headPanel = new JPanel();
         headPanel.add(new JLabel("Login"));
 
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(2,2));
-        mainPanel.setSize(400,100);
-        mainPanel.add(new JLabel("User: "));
-        mainPanel.add(loginField);
-        mainPanel.add(new JLabel("Password: "));
-        mainPanel.add(passwordField);
+        JPanel bodyPanel = new JPanel();
+        bodyPanel.setLayout(new GridLayout(2,2));
+        bodyPanel.setSize(400,100);
+        bodyPanel.add(new JLabel("User: "));
+        bodyPanel.add(loginField);
+        bodyPanel.add(new JLabel("Password: "));
+        bodyPanel.add(passwordField);
 
         JPanel footPanel = new JPanel();
         footPanel.add(loginButton);
         footPanel.add(signUpButton);
+
+        loginPanel.add(headPanel,BorderLayout.NORTH);
+        loginPanel.add(bodyPanel,BorderLayout.CENTER);
+        loginPanel.add(footPanel,BorderLayout.SOUTH);
 
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -46,13 +55,11 @@ public class Main extends JFrame {
         signUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                doSignUp(mainPanel);
+                doSignUp(loginPanel);
             }
         });
 
-        getContentPane().add(headPanel,BorderLayout.NORTH);
-        getContentPane().add(mainPanel, BorderLayout.CENTER);
-        getContentPane().add(footPanel,BorderLayout.SOUTH);
+        getContentPane().add(loginPanel);
         pack();
         setVisible(true);
     }
@@ -120,7 +127,6 @@ public class Main extends JFrame {
         signUpPane.setVisible(true);
 
         p.setVisible(false);
-
     }
 
     private void doLogin() {
@@ -134,9 +140,17 @@ public class Main extends JFrame {
 
                 JFrame frame = new JFrame("User List");
                 frame.setLayout(new BorderLayout());
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
                 frame.setSize(400,600);
+                frame.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        frame.setVisible(false);
+                        frame.dispose();
+//                        setVisible(true);
+                    }
+                });
 
                 JPanel headPanel = new JPanel();
                 headPanel.add(new JLabel("User: " + login));

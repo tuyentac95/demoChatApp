@@ -12,6 +12,8 @@ public class MainDemo {
     private static ArrayList<User> users = null;
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
+        System.out.println("Mai ơi Nguyệt đây");
+
         userManagement = new UserManagement(PATH);
         users = userManagement.readFile();
 
